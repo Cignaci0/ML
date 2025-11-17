@@ -7,7 +7,7 @@ app = Flask(__name__)
 # Configura el logging para que muestre información
 logging.basicConfig(level=logging.INFO)
 
-# --- Carga de Modelos ---
+
 try:    
     modelo_ph = load_model("modelo_ph.keras")
     modelo_tds = load_model("modelo_tds.keras")
@@ -17,7 +17,6 @@ except Exception as e:
     modelo_ph = None
     modelo_tds = None
 
-# --- FUNCIÓN DE PREDICCIÓN (CORREGIDA) ---
 def predecir_vida_util(ph, tds):
     
     # 1. Validar rangos
@@ -78,4 +77,5 @@ def predic():
 if __name__ == '__main__':
     # debug=True hace que el servidor se reinicie solo cuando guardas cambios
     app.run(host='0.0.0.0', port=5001, debug=True)
+
 
