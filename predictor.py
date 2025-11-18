@@ -4,7 +4,6 @@ import logging
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
-# Configura el logging para que muestre información
 logging.basicConfig(level=logging.INFO)
 
 
@@ -18,11 +17,10 @@ except Exception as e:
     modelo_tds = None
 
 def predecir_vida_util(ph, tds):
-    
     # 1. Validar rangos
     if ph < 6.5 or ph > 8.5 or tds > 500 or tds < 50:
         logging.warn(f"Valores fuera de rango (pH: {ph}, TDS: {tds}). Devolviendo 0 días.")
-        return 0.0  # <--- DEVUELVE 0.0 si está fuera de rango
+        return 0.0  
 
     # 2. Normalizar (Si los valores son válidos)
     ph_norm = (ph - 6.5) / (8.5 - 6.5)
@@ -77,5 +75,6 @@ def predic():
 if __name__ == '__main__':
     # debug=True hace que el servidor se reinicie solo cuando guardas cambios
     app.run(host='0.0.0.0', port=5001, debug=True)
+
 
 
