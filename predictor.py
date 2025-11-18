@@ -17,33 +17,32 @@ except Exception as e:
     modelo_tds = None
 
 def predecir_vida_util(ph, tds):
-    # 1. Validar rangos
+    # Validar rangos
     if ph < 6.5 or ph > 8.5 or tds > 500 or tds < 50:
         logging.warn(f"Valores fuera de rango (pH: {ph}, TDS: {tds}). Devolviendo 0 días.")
         return 0.0  
 
-    # 2. Normalizar (Si los valores son válidos)
+    # Normalizar (Si los valores son válidos)
     ph_norm = (ph - 6.5) / (8.5 - 6.5)
     tds_norm = (tds - 50) / (500 - 50)
 
     ph_input = np.array([[ph_norm]])
     tds_input = np.array([[tds_norm]])
 
-    # 3. Predecir
+    # Predecir
     pred_norm_ph = modelo_ph.predict(ph_input, verbose=0)
     pred_norm_tds = modelo_tds.predict(tds_input, verbose=0)
 
-    # 4. Desnormalizar predicción
+    # Desnormalizar predicción
     pred_dias_ph = pred_norm_ph * (365 - 1) + 1
     pred_dias_tds = pred_norm_tds * (365 - 1) + 1
 
-    # 5. Tomar el valor más pequeño
+    # Tomar el valor más pequeño
     dias_restantes = min(pred_dias_ph[0][0], pred_dias_tds[0][0])
     
-    # 6. Devolver el valor
+    # Devolver el valor
     return max(0, dias_restantes) 
 
-# --- Endpoint de la API ---
 @app.route("/predict", methods=["POST"])
 def predic():
 
@@ -58,22 +57,20 @@ def predic():
         
         logging.info(f"Petición de predicción recibida: pH={ph}, TDS={tds}")
         
-        # 2. Realizar la predicción (Ahora 'dias_restantes' SÍ recibirá un número)
         dias_restantes = predecir_vida_util(ph, tds) 
         
         logging.info(f"Predicción: {dias_restantes:.2f} días")
         
-        # 3. Devolver el resultado
         return jsonify({
             "dias_restantes": f"{dias_restantes:.2f}"
         })
-
     except Exception as e:
         logging.error(f"Error en la predicción: {e}", exc_info=True)
         return jsonify({"error": str(e)}), 400
     
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001, debug=True)
+
 
 
 
