@@ -41,7 +41,7 @@ def predecir_vida_util(ph, tds):
     dias_restantes = min(pred_dias_ph[0][0], pred_dias_tds[0][0])
     
     # 6. Devolver el valor
-    return max(0, dias_restantes) # <--- DEVUELVE el resultado numérico
+    return max(0, dias_restantes) 
 
 # --- Endpoint de la API ---
 @app.route("/predict", methods=["POST"])
@@ -73,8 +73,8 @@ def predic():
         return jsonify({"error": str(e)}), 400
     
 if __name__ == '__main__':
-    # debug=True hace que el servidor se reinicie solo cuando guardas cambios
     app.run(host='0.0.0.0', port=5001, debug=True)
+
 
 
 
